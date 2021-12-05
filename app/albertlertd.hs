@@ -43,8 +43,12 @@ soundAlarm :: SystemInfo -> IO ();
 soundAlarm k
   | temperature k > 350 = soundThermalAlarm >>
                           soundAlarm k {temperature = 0}
+                          -- \^ By setting @k@'s temperature to 0 before
+                          -- the recursion takes place, @soundAlarm@
+                          -- prevents an infinite loop.
   | systemIsOverheating = soundTheBatSignal >>
                           soundAlarm k {currBatVoltage = ratedBatVoltage k}
+                          -- \^ Another infinite loop is prevented.
   | otherwise = return ()
   where
   systemIsOverheating :: Bool
