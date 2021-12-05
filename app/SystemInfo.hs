@@ -1,5 +1,4 @@
 {-# LANGUAGE CPP #-}
-{-# LANGUAGE CApiFFI #-}
 
 -- | Module    : SystemInfo
 -- Description : System-information-grabbing crap
