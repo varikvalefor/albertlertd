@@ -15,6 +15,9 @@ import Control.Monad;
 import System.Process;
 import Control.Concurrent (threadDelay);
 
+-- | Attention: Men who need documentation of @main@
+--
+-- "You shouldn't be back here."
 main :: IO ();
 main = nabSystemInfo >>= soundAlarm >> threadDelay (15*10^9) >> main;
 -- A delay is added to ensure that @albertlertd@ does not
