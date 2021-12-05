@@ -50,7 +50,7 @@ nabSystemInfo =
   };
 
 -- | @getInfo@ returns the list of the Celsius-based temperature of the
--- system, the rated voltage of the system's primary batter, and the
+-- system, the rated voltage of the system's primary battery, and the
 -- current voltage of the system's battery.
 getInfo :: IO [Maybe Double];
 getInfo = map extractDoubleValue <$> mapM getValue sysctlNames
