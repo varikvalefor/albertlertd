@@ -46,18 +46,20 @@ soundAlarm k
                           -- \^ By setting @k@'s temperature to 0 before
                           -- the recursion takes place, @soundAlarm@
                           -- prevents an infinite loop.
-  | batteryIsUnderVolted = soundTheBatSignal >>
-                           soundAlarm k {currBatVoltage = ratedBatVoltage k}
-                           -- \^ Another infinite loop is prevented.
+  | batteryIsUnderVolted k = soundTheBatSignal >>
+                             soundAlarm k {currBatVoltage = ratedBatVoltage k}
+                             -- \^ Another infinite loop is prevented.
   | otherwise = return ()
   where
-  batteryIsUnderVolted :: Bool
-  batteryIsUnderVolted
-    | isNothing $ currBatVoltage k = False
-    | otherwise = fromJust (currBatVoltage k) / fromJust (ratedBatVoltage k) < 0.75
-  --
   soundThermalAlarm = playAudioFile "OVERHEAT.WAV"
   soundTheBatSignal = playAudioFile "BATSIGNL.WAV";
+
+-- | @batteryIsUnderVolted k@ iff the battery of the system which @k@
+-- represents is probably almost depleted.
+batteryIsUnderVolted :: SystemInfo -> Bool;
+batteryIsUnderVolted k
+  | isNothing $ currBatVoltage k = False
+  | otherwise = fromJust (currBatVoltage k) / fromJust (ratedBatVoltage k) < 0.75;
 
 -- | @playAudioFile k@ plays the audio file whose path is
 -- /usr/local/share/albertlert/@k@.
