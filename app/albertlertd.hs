@@ -55,7 +55,8 @@ soundAlarm k
   soundThermalAlarm = playAudioFile "OVERHEAT.WAV"
   soundTheBatSignal = playAudioFile "BATSIGNL.WAV";
 
--- | @playAudioFile k@ plays the audio file whose name is @k@.
+-- | @playAudioFile k@ plays the audio file whose path is
+-- /usr/local/share/albertlert/@k@.
 playAudioFile :: String
               -- ^ The name of the audio file which is to be played
               -> IO ();
