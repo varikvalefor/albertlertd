@@ -75,7 +75,7 @@ getInfo = map extractDoubleValue <$> mapM getValue sysctlNames
   getValue a = readProcessWithExitCode "sysctl" [a] [];
 
 -- | Where @(a,b,c)@ is the output of a sysctl(8) command which is run
--- via@'readProcessWithExitCode'@, if @b@ contains a 'Double', then
+-- via @'readProcessWithExitCode'@, if @b@ contains a 'Double', then
 -- @extractDoubleValue k@ 'Just' returns this 'Double'.
 -- @extractDoubleValue k@ otherwise outputs 'Nothing'.
 extractDoubleValue :: (ExitCode, String, String) -> Maybe Double;
