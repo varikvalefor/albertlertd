@@ -46,13 +46,13 @@ soundAlarm k
                           -- \^ By setting @k@'s temperature to 0 before
                           -- the recursion takes place, @soundAlarm@
                           -- prevents an infinite loop.
-  | systemIsOverheating = soundTheBatSignal >>
-                          soundAlarm k {currBatVoltage = ratedBatVoltage k}
-                          -- \^ Another infinite loop is prevented.
+  | batteryIsUnderVolted = soundTheBatSignal >>
+                           soundAlarm k {currBatVoltage = ratedBatVoltage k}
+                           -- \^ Another infinite loop is prevented.
   | otherwise = return ()
   where
-  systemIsOverheating :: Bool
-  systemIsOverheating
+  batteryIsUnderVolted :: Bool
+  batteryIsUnderVolted
     | isNothing $ currBatVoltage k = False
     | otherwise = fromJust (currBatVoltage k) / fromJust (ratedBatVoltage k) < 0.75
   --
