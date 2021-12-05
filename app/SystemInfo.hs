@@ -64,7 +64,17 @@ getInfo :: IO [Maybe Double];
 getInfo = map extractDoubleValue <$> mapM getValue sysctlNames
   where
   extractDoubleValue (exitcode, stdout, stderr)
-    | exitcode == ExitSuccess = Just $ read $ head $ splitOn " " $
+    | exitcode == ExitSuccess = Just $
+                                -- \^ Because a value actually exists, a
+                                -- value can be safely returned.
+                                read $
+                                -- \| Whichever unit which follows the
+                                -- space can be safely discarded; other
+                                -- parts of this program account for
+                                -- such units.
+                                head $ splitOn " " $
+                                -- \| Take the thing which FOLLOWS the
+                                -- equals sign, dumb-ass.
                                 (!!1) $ splitOn "=" stdout
     | otherwise = Nothing
   sysctlNames = ["hw.sensors.cpu0.temp0",
