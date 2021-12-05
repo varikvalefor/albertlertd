@@ -1,0 +1,26 @@
+cabal-version: 2.4
+name:          albertlertd
+version:       0.1.0.0
+synopsis:      TUI client for the Matrix instant messaging service.
+description:   albertlertd sounds some alarms when stuff goes wrong
+               with the system on which albertlertd is run.
+bug-reports:   http://github.com/varikvalefor/matel/issues
+license:       Unlicense
+author:        Varik Valefor
+maintainer:    varikvalefor@aol.com
+copyright:     (c) Varik Valefor 2021.
+category:      System
+
+executable albertlertd
+  main-is: albertlertd.hs
+  ghc-options: -haddock -threaded -O2
+  other-modules:
+    SystemInfo
+  build-depends:
+    base ^>= 4.14.1.0,
+    process == 1.6.13.2,
+    split >= 0.2.3 && < 0.2.4
+  hs-source-dirs: app
+  default-language: Haskell2010
+  other-extensions:
+    CPP
