@@ -1,3 +1,6 @@
+{-# LANGUAGE CPP #-}
+{-# LANGUAGE CApiFFI #-}
+
 -- | Module    : SystemInfo
 -- Description : System-information-grabbing crap
 -- Copyright   : (c) Varik Valefor, 2021
@@ -8,6 +11,8 @@
 --
 -- This module contains 'SystemInfo' and @'nabSystemInfo'@.
 module SystemInfo where
+import System.Process;
+import Data.List.Split (splitOn);
 
 -- | SystemInfo holds information regarding some arbitrary computer
 -- system.
@@ -32,4 +37,28 @@ data SystemInfo = SystemInfo {
 -- | @nabSystemInfo@ returns 'SystemInfo' regarding the system on which
 -- @nabSystemInfo@ is run.
 nabSystemInfo :: IO SystemInfo;
-nabSystemInfo = error "This thing is unimplemented.";
+#ifdef openbsd_HOST_OS
+nabSystemInfo =
+  getInfo >>= \info ->
+  return SystemInfo {
+    temperature = info !! 0 + 273.15,
+    -- \^ C-to-K conversion occurs here.
+    currBatVoltage = info !! 1,
+    ratedBatVoltage = info !! 2
+  };
+
+-- | @getInfo@ returns the list of the Celsius-based temperature of the
+-- system, the rated voltage of the system's primary batter, and the
+-- current voltage of the system's battery.
+getInfo :: IO [Double];
+getInfo = map extractDoubleValue <$> mapM getValue sysctlNames
+  where
+  extractDoubleValue = read . head . splitOn " " . (!!1) . splitOn "="
+  sysctlNames = ["hw.sensors.cpu0.temp0",
+                 "hw.sensors.acpibat0.volt0",
+                 "hw.sensors.acpibat0.volt1"]
+  getValue a = readProcess "sysctl" [a] [];
+#else
+nabSystemInfo = error $ "nabSystemInfo is unfamiliar with " ++
+                        "this operating system.";
+#endif
