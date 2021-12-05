@@ -64,7 +64,7 @@ batteryIsUnderVolted k
   | isNothing $ currBatVoltage k = False
   | otherwise = cV / rV < 0.75
   where
-  cV = fromJust (currBatVoltage k) 
+  cV = fromJust (currBatVoltage k)
   rV = fromJust (ratedBatVoltage k);
 
 -- | @playAudioFile k@ plays the audio file whose path is
