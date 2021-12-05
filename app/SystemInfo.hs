@@ -55,6 +55,11 @@ nabSystemInfo =
 -- | @getInfo@ returns the list of the Celsius-based temperature of the
 -- system, the rated voltage of the system's primary battery, and the
 -- current voltage of the system's battery.
+--
+-- Why in the hell is this comment a piece of Haddock documentation?
+-- Haddock is blissfully* unaware of the existence of @getInfo@.
+--
+-- *Haddock is _probably_ incapable of experiencing bliss.
 getInfo :: IO [Maybe Double];
 getInfo = map extractDoubleValue <$> mapM getValue sysctlNames
   where
