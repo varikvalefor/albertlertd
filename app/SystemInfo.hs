@@ -58,7 +58,7 @@ getInfo = map extractDoubleValue <$> mapM getValue sysctlNames
   extractDoubleValue (exitcode, stdout, stderr)
     | exitcode == ExitSuccess = Just $ read $ head $ splitOn " " $
                                 (!!1) $ splitOn "=" stdout
-    | otherwise = Nothing;
+    | otherwise = Nothing
   sysctlNames = ["hw.sensors.cpu0.temp0",
                  "hw.sensors.acpibat0.volt0",
                  "hw.sensors.acpibat0.volt1"]
