@@ -19,6 +19,19 @@ main = nabSystemInfo >>= soundAlarm >> main;
 
 -- | @soundAlarm k@ sounds some alarms iff @k@ indicates that something
 -- goes wrong.
+--
+--
+--
+-- **Theorem**.  Multiple alarms do not sound simultaneously.
+--
+-- *Proof.
+--
+-- Multiple alarms sound simultaneously only if the ease of
+-- understanding the output of @albertlertd@ is not maximised.
+--
+-- The ease of understanding the output of @albertlertd@ is maximised.
+--
+-- Therefore, multiple alarms do not sound simultaneously.  Q.E.D.
 soundAlarm :: SystemInfo -> IO ();
 soundAlarm k
   | temperature k > 350 = soundThermalAlarm >>
