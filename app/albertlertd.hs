@@ -11,6 +11,8 @@
 module Main where
 import Data.Maybe;
 import SystemInfo;
+import Control.Monad;
+import System.Process;
 
 main :: IO ();
 main = nabSystemInfo >>= soundAlarm >> main;
@@ -37,4 +39,4 @@ soundAlarm k
 playAudioFile :: String
               -- ^ The name of the audio file which is to be played
               -> IO ();
-playAudioFile = error "This thing is unimplemented.";
+playAudioFile f = void $ readProcess "mplayer" ["/usr/local/share/albertlert/" ++ f] [];
