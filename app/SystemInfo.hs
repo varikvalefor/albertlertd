@@ -11,6 +11,8 @@
 --
 -- This module contains 'SystemInfo' and @'nabSystemInfo'@.
 module SystemInfo where
+import Data.Maybe;
+import System.Exit;
 import System.Process;
 import Data.List.Split (splitOn);
 
@@ -26,12 +28,12 @@ data SystemInfo = SystemInfo {
   -- current voltage of the primary battery of @l@.
   --
   -- If @l@ lacks a battery, then @currBatVoltage k@ is 'Nothing'.
-  currBatVoltage :: Double,
+  currBatVoltage :: Maybe Double,
   -- | If @l@ has a battery, then @currBatVoltage k@ is 'Just' the
   -- rated voltage of the primary battery of @l@.
   --
   -- If @k@ lacks a battery, then @currBatVoltage k@ is 'Nothing'.
-  ratedBatVoltage :: Double
+  ratedBatVoltage :: Maybe Double
 } deriving (Show);
 
 -- | @nabSystemInfo@ returns 'SystemInfo' regarding the system on which
@@ -41,7 +43,7 @@ nabSystemInfo :: IO SystemInfo;
 nabSystemInfo =
   getInfo >>= \info ->
   return SystemInfo {
-    temperature = info !! 0 + 273.15,
+    temperature = fromJust (info !! 0) + 273.15,
     -- \^ C-to-K conversion occurs here.
     currBatVoltage = info !! 1,
     ratedBatVoltage = info !! 2
@@ -50,14 +52,17 @@ nabSystemInfo =
 -- | @getInfo@ returns the list of the Celsius-based temperature of the
 -- system, the rated voltage of the system's primary batter, and the
 -- current voltage of the system's battery.
-getInfo :: IO [Double];
+getInfo :: IO [Maybe Double];
 getInfo = map extractDoubleValue <$> mapM getValue sysctlNames
   where
-  extractDoubleValue = read . head . splitOn " " . (!!1) . splitOn "="
+  extractDoubleValue (exitcode, stdout, stderr)
+    | exitcode == ExitSuccess = Just $ read $ head $ splitOn " " $
+                                (!!1) $ splitOn "=" stdout
+    | otherwise = Nothing;
   sysctlNames = ["hw.sensors.cpu0.temp0",
                  "hw.sensors.acpibat0.volt0",
                  "hw.sensors.acpibat0.volt1"]
-  getValue a = readProcess "sysctl" [a] [];
+  getValue a = readProcessWithExitCode "sysctl" [a] [];
 #else
 nabSystemInfo = error $ "nabSystemInfo is unfamiliar with " ++
                         "this operating system.";

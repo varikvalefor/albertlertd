@@ -9,6 +9,7 @@
 -- This module contains the most high-level bits of albertlertd(8)'s
 -- source code.
 module Main where
+import Data.Maybe;
 import SystemInfo;
 
 main :: IO ();
@@ -25,7 +26,9 @@ soundAlarm k
   | otherwise = return ()
   where
   systemIsOverheating :: Bool
-  systemIsOverheating = currBatVoltage k / ratedBatVoltage k < 0.75
+  systemIsOverheating
+    | isNothing $ currBatVoltage k = False
+    | otherwise = fromJust (currBatVoltage k) / fromJust (ratedBatVoltage k) < 0.75
   --
   soundThermalAlarm = playAudioFile "OVERHEAT.WAV"
   soundTheBatSignal = playAudioFile "BATSIGNL.WAV";
