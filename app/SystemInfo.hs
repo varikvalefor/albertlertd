@@ -10,7 +10,10 @@
 -- Portability : POSIX
 --
 -- This module contains 'SystemInfo' and @'nabSystemInfo'@.
-module SystemInfo where
+module SystemInfo (
+  SystemInfo(..),
+  nabSystemInfo
+) where
 import Data.Maybe;
 import System.Exit;
 import System.Process;
