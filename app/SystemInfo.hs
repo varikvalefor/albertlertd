@@ -9,6 +9,10 @@
 -- Portability : POSIX
 --
 -- This module contains 'SystemInfo' and @'nabSystemInfo'@.
+--
+-- WARNING: This module makes heavy use of ifdefs.  Luckily, the use of
+-- such ifdefs is at least somewhat justifiable.  However, the reader
+-- _must_ pay attention to the boundaries of such ifdefs.
 module SystemInfo (
   SystemInfo(..),
   nabSystemInfo
