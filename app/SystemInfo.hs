@@ -77,6 +77,9 @@ getInfo = map extractDoubleValue <$> mapM getValue sysctlNames
                                 -- equals sign, dumb-ass.
                                 (!!1) $ splitOn "=" stdout
     | otherwise = Nothing
+  -- \| Documenting the contents of @sysctlNames@ is briefly considered.
+  -- However, VARIK finds that such documentation is probably
+  -- unnecessary; @sysctlNames@ should be pretty self-explanatory.
   sysctlNames = ["hw.sensors.cpu0.temp0",
                  "hw.sensors.acpibat0.volt0",
                  "hw.sensors.acpibat0.volt1"]
