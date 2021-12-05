@@ -67,7 +67,7 @@ getInfo = map extractDoubleValue <$> mapM getValue sysctlNames
                                 -- \^ Because a value actually exists, a
       {-     @       @     -}   -- value can be safely returned.
       {-      @     @      -}   read $
-      {-       @   @       -}   -- \| Whichever unit which follows the
+      {-       @   @       -}   -- \| Whatever unit which follows the
       {-        @ @        -}   -- space can be safely discarded; other
       {-         @         -}   -- parts of this program account for
       {- @               @ -}   -- such units.
