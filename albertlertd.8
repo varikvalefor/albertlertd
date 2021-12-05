@@ -1,0 +1,46 @@
+.Dd $Mdocdate$
+.Dt albertlertd 8
+.Os OpenBSD 7.0
+.Sh NAME
+.Nm albertlertd
+.Nd cheesy automatic alarm daemon
+.Sh SYNOPSIS
+.Nm albertlertd
+.Sh DESCRIPTION
+.Nm albertlertd
+monitors various aspects of the host system via
+.Xr sysctl 8 .
+If a particular system statistic is bad, then
+.Nm albertlertd
+sounds an alarm.
+.Sh FILES
+The sounds of the alarms of
+.Nm albertlertd
+are stored in
+.Pa /usr/local/share/albertlert/ .
+.Pp
+The files which may be reasonably placed into this directory are as
+follows:
+.Bl -tag -width Ds
+.It Pa OVERHEAT.WAV
+This audio file is played if
+.Nm albertlertd
+concludes that the system is overheating.
+.It Pa BATSIGNL.WAV
+This file is played if
+.Nm albertlertd
+concludes that the battery of the system is nearly depleted.
+.Pp
+On systems which lack batteries, this file is never used.
+.El
+.Sh AUTHOR
+.Nm albertlertd
+is maintained by
+.An Varik
+.An Dq NOT A COMPUTER PROGRAMMER!!!
+.An Valefor
+.Aq Mt varikvalefor@aol.com .
+Please send feedback accordingly.
+.Pp
+Alternatively, VARIK can be contacted via Matrix.
+VARIK's primary Matrix username is @varikvalefor:matrix.org.
