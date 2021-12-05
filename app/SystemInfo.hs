@@ -62,20 +62,6 @@ nabSystemInfo =
 getInfo :: IO [Maybe Double];
 getInfo = map extractDoubleValue <$> mapM getValue sysctlNames
   where
-  extractDoubleValue (exitcode, stdout, stderr)
-    | exitcode == ExitSuccess = Just $
-                                -- \^ Because a value actually exists, a
-      {-     @       @     -}   -- value can be safely returned.
-      {-      @     @      -}   read $
-      {-       @   @       -}   -- \| Whatever unit which follows the
-      {-        @ @        -}   -- space can be safely discarded; other
-      {-         @         -}   -- parts of this program account for
-      {- @               @ -}   -- such units.
-      {-  @@           @@  -}   head $ splitOn " " $
-      {-    @@@@@@@@@@@    -}   -- \| Take the thing which FOLLOWS the
-                                -- equals sign, dumb-ass.
-                                (!!1) $ splitOn "=" stdout
-    | otherwise = Nothing
   -- \| Documenting the contents of @sysctlNames@ is briefly considered.
   -- However, VARIK finds that such documentation is probably
   -- unnecessary; @sysctlNames@ should be pretty self-explanatory.
@@ -83,6 +69,26 @@ getInfo = map extractDoubleValue <$> mapM getValue sysctlNames
                  "hw.sensors.acpibat0.volt0",
                  "hw.sensors.acpibat0.volt1"]
   getValue a = readProcessWithExitCode "sysctl" [a] [];
+
+-- | Where @(a,b,c)@ is the output of a sysctl(8) command which is run
+-- via@'readProcessWithExitCode'@, if @b@ contains a 'Double', then
+-- @extractDoubleValue k@ 'Just' returns this 'Double'.
+-- @extractDoubleValue k@ otherwise outputs 'Nothing'.
+extractDoubleValue :: (ExitCode, String, String) -> Maybe Double;
+extractDoubleValue (exitcode, stdout, stderr)
+  | exitcode == ExitSuccess = Just $
+                              -- \^ Because a value actually exists, a
+    {-     @       @     -}   -- value can be safely returned.
+    {-      @     @      -}   read $
+    {-       @   @       -}   -- \| Whatever unit which follows the
+    {-        @ @        -}   -- space can be safely discarded; other
+    {-         @         -}   -- parts of this program account for
+    {- @               @ -}   -- such units.
+    {-  @@           @@  -}   head $ splitOn " " $
+    {-    @@@@@@@@@@@    -}   -- \| Take the thing which FOLLOWS the
+                              -- equals sign, dumb-ass.
+                              (!!1) $ splitOn "=" stdout
+  | otherwise = Nothing;
 #else
 nabSystemInfo = error $ "nabSystemInfo is unfamiliar with " ++
                         "this operating system.";
