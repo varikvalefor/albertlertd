@@ -51,8 +51,8 @@ nabSystemInfo =
   return SystemInfo {
     temperature = fromJust (info !! 0) + 273.15,
     -- \^ C-to-K conversion occurs here.
-    currBatVoltage = info !! 1,
-    ratedBatVoltage = info !! 2
+    ratedBatVoltage = info !! 1,
+    currBatVoltage = info !! 2
   };
 
 -- | @getInfo@ returns the list of the Celsius-based temperature of the
