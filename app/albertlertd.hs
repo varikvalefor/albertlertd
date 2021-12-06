@@ -9,6 +9,7 @@
 -- This module contains the most high-level bits of albertlertd(8)'s
 -- source code.
 module Main where
+import Syslog;
 import Data.Maybe;
 import SystemInfo;
 import Control.Monad;
@@ -54,8 +55,12 @@ soundAlarm k
                              -- \^ Another infinite loop is prevented.
   | otherwise = return ()
   where
-  soundThermalAlarm = playAudioFile "OVERHEAT.WAV"
-  soundTheBatSignal = playAudioFile "BATSIGNL.WAV";
+  soundThermalAlarm = playAudioFile "OVERHEAT.WAV" >>
+                      syslog ("The current system temperature is " ++
+                              show (temperature k) ++ ".")
+  soundTheBatSignal = playAudioFile "BATSIGNL.WAV" >>
+                      syslog("The current battery voltage is " ++
+                             show (currBatVoltage k) ++ ".");
 
 -- | @batteryIsUnderVolted k@ iff the battery of the system which @k@
 -- represents is probably almost depleted.
