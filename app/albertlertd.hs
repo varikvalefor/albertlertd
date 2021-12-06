@@ -67,7 +67,7 @@ soundAlarm k
 batteryIsUnderVolted :: SystemInfo -> Bool;
 batteryIsUnderVolted k
   | isNothing $ currBatVoltage k = False
-  | otherwise = cV / rV < 0.75
+  | otherwise = cV / rV < 0.9
   where
   cV = fromJust (currBatVoltage k)
   rV = fromJust (ratedBatVoltage k);
