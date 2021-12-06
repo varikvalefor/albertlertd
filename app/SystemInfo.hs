@@ -72,6 +72,14 @@ getInfo = map extractDoubleValue <$> mapM getValue sysctlNames
   sysctlNames = ["hw.sensors.cpu0.temp0",
                  "hw.sensors.acpibat0.volt0",
                  "hw.sensors.acpibat0.volt1"]
+  -- \| sysctl(8) is used instead of sysctl(2) because the simplicity of
+  -- using sysctl(8) is greater than the simplicity of using sysctl(2);
+  -- the reading of sensors via sysctl(2) demands the use of some
+  -- @struct@s and other crazy things, whereas sysctl(8)'s use just
+  -- demands some basic parsing.
+  --
+  -- sysctl(8) is _technically_ relatively inefficient.  However, such
+  -- inefficiency should be trivial.
   getValue a = readProcessWithExitCode "sysctl" [a] [];
 
 -- | Where @(a,b,c)@ is the output of a sysctl(8) command which is run
