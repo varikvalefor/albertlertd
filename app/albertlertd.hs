@@ -19,7 +19,7 @@ import Control.Concurrent (threadDelay);
 --
 -- "You shouldn't be back here."
 main :: IO ();
-main = nabSystemInfo >>= soundAlarm >> threadDelay (15*10^9) >> main;
+main = nabSystemInfo >>= soundAlarm >> threadDelay (5*10^6) >> main;
 -- A delay is added to ensure that @albertlertd@ does not
 -- demand _too_ much processing power.
 --
