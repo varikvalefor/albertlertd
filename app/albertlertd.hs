@@ -60,7 +60,7 @@ soundAlarm k
                               show (temperature k) ++ ".")
   soundTheBatSignal = playAudioFile "BATSIGNL.WAV" >>
                       syslog("The current battery voltage is " ++
-                             show (currBatVoltage k) ++ ".");
+                             show (currBatVoltage k) ++ " kelvins.");
 
 -- | @batteryIsUnderVolted k@ iff the battery of the system which @k@
 -- represents is probably almost depleted.
