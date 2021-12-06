@@ -20,7 +20,8 @@ executable albertlertd
   build-depends:
     base ^>= 4.14.1.0,
     process == 1.6.13.2,
-    split >= 0.2.3 && < 0.2.4
+    split >= 0.2.3 && < 0.2.4,
+    unix >= 2.7.2 && < 2.8
   hs-source-dirs: app
   default-language: Haskell2010
   other-extensions:

@@ -22,16 +22,18 @@ import System.Posix.Process (forkProcess);
 --
 -- "You shouldn't be back here."
 main :: IO ();
-main = void (forkProcess d) >> exitSuccess
+main = void (forkProcess damn) >> exitSuccess
   where
-  -- \| @d@ is the function which actually serves as the daemon.
-  d = nabSystemInfo >>= soundAlarm >> threadDelay (5*10^6) >> d;
-  -- A delay is added to ensure that @albertlertd@ does not
-  -- demand _too_ much processing power.
-  --
-  -- If this delay is not present, then @albertlertd@ damn near
-  -- constantly runs sysctl(8).  The same results are fetched most of
-  -- the time, anyway.
+
+-- | @d@ is the function which actually serves as the daemon.
+damn :: IO ();
+damn = nabSystemInfo >>= soundAlarm >> threadDelay (5*10^6) >> damn;
+-- A delay is added to ensure that @albertlertd@ does not
+-- demand _too_ much processing power.
+--
+-- If this delay is not present, then @albertlertd@ damn near
+-- constantly runs sysctl(8).  The same results are fetched most of
+-- the time, anyway.
 
 -- | @soundAlarm k@ sounds some alarms iff @k@ indicates that something
 -- goes wrong.
