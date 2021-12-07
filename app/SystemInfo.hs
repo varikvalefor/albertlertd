@@ -17,6 +17,7 @@ module SystemInfo (
   SystemInfo(..),
   nabSystemInfo
 ) where
+import Text.Read;
 import Data.Maybe;
 import System.Exit;
 import System.Process;
@@ -29,17 +30,17 @@ import Data.List.Split (splitOn);
 -- whose information is contained within 'SystemInfo' value @k@.
 data SystemInfo = SystemInfo {
   -- | @temperature k@ is the Kelvin-based temperature of @l@.
-  temperature :: Double,
+  temperature :: !Double,
   -- | If @l@ has a battery, then @currBatVoltage k@ is 'Just' the
   -- current voltage of the primary battery of @l@.
   --
   -- If @l@ lacks a battery, then @currBatVoltage k@ is 'Nothing'.
-  currBatVoltage :: Maybe Double,
+  currBatVoltage :: !(Maybe Double),
   -- | If @l@ has a battery, then @currBatVoltage k@ is 'Just' the
   -- rated voltage of the primary battery of @l@.
   --
   -- If @k@ lacks a battery, then @currBatVoltage k@ is 'Nothing'.
-  ratedBatVoltage :: Maybe Double
+  ratedBatVoltage :: !(Maybe Double)
 } deriving (Show);
 
 -- | @nabSystemInfo@ returns 'SystemInfo' regarding the system on which
@@ -47,13 +48,22 @@ data SystemInfo = SystemInfo {
 nabSystemInfo :: IO SystemInfo;
 #ifdef openbsd_HOST_OS
 nabSystemInfo =
-  getInfo >>= \info ->
+  getInfo >>= \[tmp, ratB, road] ->
   return SystemInfo {
-    temperature = fromJust (info !! 0) + 273.15,
+    temperature = mayB tmp + 273.15,
     -- \^ C-to-K conversion occurs here.
-    ratedBatVoltage = info !! 1,
-    currBatVoltage = info !! 2
-  };
+    ratedBatVoltage = ratB,
+    currBatVoltage = road
+  }
+  -- \| The C preprocessor prevents the use of the standard
+  -- backslash-based multi-string notation.
+  -- This solution is a bit ugly but at least works.
+  --
+  -- [INSERT THE NOISE OF AN IRRITATED TIM ALLEN HERE.]
+  where mayB = fromMaybe (error $ "An error is revealed!  tmp is " ++
+                                  "Nothing, which indicates that " ++
+                                  "sysctl(8)'s output is not parsed " ++
+                                  "successfully.");
 
 -- | @getInfo@ returns the list of the Celsius-based temperature of the
 -- system, the rated voltage of the system's primary battery, and the
@@ -88,18 +98,15 @@ getInfo = map extractDoubleValue <$> mapM getValue sysctlNames
 -- @extractDoubleValue k@ otherwise outputs 'Nothing'.
 extractDoubleValue :: (ExitCode, String, String) -> Maybe Double;
 extractDoubleValue (exitcode, stdout, stderr)
-  | exitcode == ExitSuccess = Just $
-                              -- \^ Because a value actually exists, a
-    {-     @       @     -}   -- value can be safely returned.
-    {-      @     @      -}   read $
-    {-       @   @       -}   -- \| Whatever unit which follows the
-    {-        @ @        -}   -- space can be safely discarded; other
-    {-         @         -}   -- parts of this program account for
-    {- @               @ -}   -- such units.
-    {-  @@           @@  -}   head $ splitOn " " $
-    {-    @@@@@@@@@@@    -}   -- \| Take the thing which FOLLOWS the
-                              -- equals sign, dumb-ass.
-                              (!!1) $ splitOn "=" stdout
+  | exitcode == ExitSuccess = readMaybe $
+    {-     @       @     -}   -- \| Whatever unit which follows the
+    {-      @     @      -}   -- space can be safely discarded; other
+    {-       @   @       -}   -- parts of this program account for
+    {-        @ @        -}   -- such units.
+    {-         @         -}   head $ splitOn " " $
+    {- @               @ -}   -- \| Take the thing which FOLLOWS the
+    {-  @@           @@  -}   -- equals sign, dumb-ass.
+    {-    @@@@@@@@@@@    -}   (!!1) $ splitOn "=" stdout
   | otherwise = Nothing;
 #else
 nabSystemInfo = error $ "nabSystemInfo is unfamiliar with " ++
