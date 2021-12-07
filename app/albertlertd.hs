@@ -75,7 +75,7 @@ batteryIsUnderVolted k
   | isNothing $ currBatVoltage k = False
   | otherwise = cV / rV < 0.9
   -- \^ This hack is used because OpenBSD does not properly read the
-  -- remaining capacity of VARIK's primary terminal.
+  -- remaining capacity of the battery of VARIK's primary terminal.
   --
   -- This hack is potentially excessively cautious... but at least
   -- indicates that the battery is hardly full.
