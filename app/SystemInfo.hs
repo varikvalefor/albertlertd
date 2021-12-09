@@ -40,7 +40,19 @@ data SystemInfo = SystemInfo {
   -- rated voltage of the primary battery of @l@.
   --
   -- If @k@ lacks a battery, then @currBatVoltage k@ is 'Nothing'.
-  ratedBatVoltage :: !(Maybe Double)
+  ratedBatVoltage :: !(Maybe Double),
+  -- | @loadAverage1Minute k@ is the one-minute load average of the
+  -- system.
+  loadAverage1Minute :: !Double,
+  -- | @numProcessors k@ is the number of on-line processors of the
+  -- system.
+  --
+  -- VARIK finds that storing a value which should be a natural number
+  -- as a 'Double' feels a bit dirty... but is probably the best
+  -- solution in this case; if 'numProcessors' is an 'Integral' type,
+  -- then comparing 'numProcessors' and 'loadAverage1Minute' demands the
+  -- conversion of 'numProcessors' into a 'Double', anyway.
+  numProcessors :: Double
 } deriving (Show);
 
 -- | @nabSystemInfo@ returns 'SystemInfo' regarding the system on which
@@ -48,12 +60,14 @@ data SystemInfo = SystemInfo {
 nabSystemInfo :: IO SystemInfo;
 #ifdef openbsd_HOST_OS
 nabSystemInfo =
-  getInfo >>= \[tmp, ratB, road] ->
+  getInfo >>= \[tmp, ratB, road, l1, numbHeart] ->
   return SystemInfo {
     temperature = mayB tmp + 273.15,
     -- \^ C-to-K conversion occurs here.
     ratedBatVoltage = ratB,
-    currBatVoltage = road
+    currBatVoltage = road,
+    loadAverage1Minute = mayB l1,
+    numProcessors = mayB numbHeart
   }
   -- \| The C preprocessor prevents the use of the standard
   -- backslash-based multi-string notation.
@@ -81,7 +95,9 @@ getInfo = map extractDoubleValue <$> mapM getValue sysctlNames
   -- unnecessary; @sysctlNames@ should be pretty self-explanatory.
   sysctlNames = ["hw.sensors.cpu0.temp0",
                  "hw.sensors.acpibat0.volt0",
-                 "hw.sensors.acpibat0.volt1"]
+                 "hw.sensors.acpibat0.volt1",
+                 "vm.loadavg",
+                 "hw.ncpuonline"]
   -- \| sysctl(8) is used instead of sysctl(2) because the simplicity of
   -- using sysctl(8) is greater than the simplicity of using sysctl(2);
   -- the reading of sensors via sysctl(2) demands the use of some
@@ -90,7 +106,13 @@ getInfo = map extractDoubleValue <$> mapM getValue sysctlNames
   --
   -- sysctl(8) is _technically_ relatively inefficient.  However, such
   -- inefficiency should be trivial.
-  getValue a = readProcessWithExitCode "sysctl" [a] [];
+  getValue a = maybeFirst <$> readProcessWithExitCode "sysctl" [a] []
+    where
+    maybeFirst (code, stdout, stderr)
+      -- \| vm.loadavg contains a few values.  However, the first value
+      -- is the only value which is terribly important.
+      | a == "vm.loadavg" = (code, head $ words stdout, stderr)
+      | otherwise = (code, stdout, stderr);
 
 -- | Where @(a,b,c)@ is the output of a sysctl(8) command which is run
 -- via @'readProcessWithExitCode'@, if @b@ contains a 'Double', then

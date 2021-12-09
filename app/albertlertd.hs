@@ -61,6 +61,15 @@ soundAlarm k
                              -- \^ Another infinite loop is prevented.
   | otherwise = return ()
   where
+  soundOvrLoadAlarm = playAudioFile "OVERLOAD.WAV" >>
+                      syslog ("The current one-minute load average " ++
+                              "is " ++ show (loadAverage1Minute k) ++
+                              -- VARIK detests the need for this line
+                              -- break.
+                              --
+                              -- Ironically, this comment contains
+                              -- another cheesy-looking line break.
+                              ".")
   soundThermalAlarm = playAudioFile "OVERHEAT.WAV" >>
                       syslog ("The current system temperature is " ++
                               show (temperature k) ++ ".")
@@ -82,6 +91,13 @@ batteryIsUnderVolted k
   where
   cV = fromJust (currBatVoltage k)
   rV = fromJust (ratedBatVoltage k);
+
+-- | @isOverloaded k@ iff @k@ indicates that the system is overloaded.
+--
+-- The system is overloaded iff the system's one-minute load average is
+-- greater than the number of processors of the system.
+isOverloaded :: SystemInfo -> Bool;
+isOverloaded sighs = loadAverage1Minute sighs > numProcessors sighs;
 
 -- | @playAudioFile k@ plays the audio file whose path is
 -- /usr/local/share/albertlert/@k@.
