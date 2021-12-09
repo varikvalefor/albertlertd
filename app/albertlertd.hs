@@ -89,8 +89,16 @@ batteryIsUnderVolted k
   -- This hack is potentially excessively cautious... but at least
   -- indicates that the battery is hardly full.
   where
-  cV = fromJust (currBatVoltage k)
-  rV = fromJust (ratedBatVoltage k);
+  cV = fromMaybe (error "Something has gone mad wrong.  \
+                        \cV is apparently of type Just... but not \
+                        \really; fromMaybe behaves as though cV is \
+                        \Nothing.")
+                 (currBatVoltage k)
+  rV = fromMaybe (error "currBatVoltage is of type Just, but \
+                        \ratedBatVoltage is of type Nothing.\n\
+                        \In the words of a _Deus Ex_ MJ12 foot \
+                        \soldier, \"you shouldn't be back here.\"")
+                 (ratedBatVoltage k);
 
 -- | @isOverloaded k@ iff @k@ indicates that the system is overloaded.
 --
