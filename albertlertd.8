@@ -13,6 +13,15 @@ monitors various aspects of the host system via
 If a particular system statistic is bad, then
 .Nm albertlertd
 sounds an alarm.
+.Pp
+.Nm albertlertd
+is created because
+.Ox 7.0
+does not properly read the capacity of the battery of VARIK's primary
+terminal and frequently permits the depletion of this battery, which
+results in lost time, and,
+.Em potentially ,
+lost work.
 .Sh FILES
 The sounds of the alarms of
 .Nm albertlertd
