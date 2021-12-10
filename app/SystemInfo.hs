@@ -74,7 +74,7 @@ nabSystemInfo =
   -- This solution is a bit ugly but at least works.
   --
   -- [INSERT THE NOISE OF AN IRRITATED TIM ALLEN HERE.]
-  where mayB = fromMaybe (error $ "An error is revealed!  tmp is " ++
+  where mayB = fromMaybe (error $ "An error is revealed!  A value is " ++
                                   "Nothing, which indicates that " ++
                                   "sysctl(8)'s output is not parsed " ++
                                   "successfully.");
