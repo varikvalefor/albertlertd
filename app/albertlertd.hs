@@ -15,6 +15,7 @@ import SystemInfo;
 import System.Exit;
 import Control.Monad;
 import System.Process;
+import qualified Messages as Msg;
 import Control.Concurrent (threadDelay);
 import System.Posix.Process (forkProcess);
 
@@ -62,20 +63,11 @@ soundAlarm k
   | otherwise = return ()
   where
   soundOvrLoadAlarm = playAudioFile "OVERLOAD.WAV" >>
-                      syslog ("The current one-minute load average " ++
-                              "is " ++ show (loadAverage1Minute k) ++
-                              -- VARIK detests the need for this line
-                              -- break.
-                              --
-                              -- Ironically, this comment contains
-                              -- another cheesy-looking line break.
-                              ".")
+                      syslog (Msg.load k)
   soundThermalAlarm = playAudioFile "OVERHEAT.WAV" >>
-                      syslog ("The current system temperature is " ++
-                              show (temperature k) ++ ".")
+                      syslog (Msg.temp k)
   soundTheBatSignal = playAudioFile "BATSIGNL.WAV" >>
-                      syslog("The current battery voltage is " ++
-                             show (currBatVoltage k) ++ ".");
+                      syslog(Msg.super k)
 
 -- | @batteryIsUnderVolted k@ iff the battery of the system which @k@
 -- represents is probably almost depleted.

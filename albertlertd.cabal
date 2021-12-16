@@ -17,6 +17,7 @@ executable albertlertd
   other-modules:
     SystemInfo
     Syslog
+    Messages
   build-depends:
     base ^>= 4.14.1.0,
     process == 1.6.13.2,
