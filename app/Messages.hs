@@ -63,4 +63,5 @@ super
 currBatVoltage' :: SystemInfo -> Double;
 currBatVoltage' = fromMaybe (error blah) . currBatVoltage
   where blah = "Something goes horribly wrong!  currBatVoltage' is " ++
-               "called on a system, which should not happen.";
+               "called on a system which lacks a battery, which " ++
+               "should not happen.";
