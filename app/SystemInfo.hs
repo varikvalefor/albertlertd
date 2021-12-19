@@ -125,7 +125,7 @@ extractDoubleValue (exitcode, stdout, stderr)
     {-      @     @      -}   -- space can be safely discarded; other
     {-       @   @       -}   -- parts of this program account for
     {-        @ @        -}   -- such units.
-    {-         @         -}   head $ splitOn " " $
+    {-         @         -}   head $ words $
     {- @               @ -}   -- \| Take the thing which FOLLOWS the
     {-  @@           @@  -}   -- equals sign, dumb-ass.
     {-    @@@@@@@@@@@    -}   (!!1) $ splitOn "=" stdout
