@@ -8,7 +8,11 @@
 --
 -- This module contains some functions which generate messages which are
 -- to be written to the system log.
-module Messages (temp, load, super) where
+module Messages (
+  temp,
+  load,
+  super
+) where
 import SystemInfo;
 import Data.Maybe;
 
