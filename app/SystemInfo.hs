@@ -108,11 +108,11 @@ getInfo = map extractDoubleValue <$> mapM getValue sysctlNames
   -- inefficiency should be trivial.
   getValue a = maybeFirst <$> readProcessWithExitCode "sysctl" [a] []
     where
-    maybeFirst (code, stdout, stderr)
+    maybeFirst (code, stdout, stderr) = case a of
       -- \| vm.loadavg contains a few values.  However, the first value
       -- is the only value which is terribly important.
-      | a == "vm.loadavg" = (code, head $ words stdout, stderr)
-      | otherwise = (code, stdout, stderr);
+      "vm.loadavg" -> (code, head $ words stdout, stderr)
+      _            -> (code, stdout, stderr);
 
 -- | Where @(a,b,c)@ is the output of a sysctl(8) command which is run
 -- via @'readProcessWithExitCode'@, if @b@ contains a 'Double', then
