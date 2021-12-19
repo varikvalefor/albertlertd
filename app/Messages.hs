@@ -24,37 +24,35 @@ useLojban = True;
 -- | @temp k@ describes the temperature of the system whose information
 -- is contained within @k@.
 temp :: SystemInfo -> String;
-temp
+temp s
   | useLojban = jbTemp
   | otherwise = enTemp
   where
-  jbTemp s = ".i le ciste ca kelvo li " ++ show (temperature s)
-  enTemp s = "The current system temperature is " ++
-           show (temperature s) ++ ".";
+  jbTemp = ".i le ciste ca kelvo li " ++ t
+  enTemp = "The current system temperature is " ++ t ++ "."
+  t = show $ temperature s;
 
 -- | @temp k@ describes the load average of the system whose information
 -- is contained within @k@.
 load :: SystemInfo -> String;
-load
+load s
   | useLojban = jbLoad
   | otherwise = enLoad
   where
-  jbLoad s = ".i le mentu bo samru'e cnano ca jibni li " ++
-             show (loadAverage1Minute s) ++ ".";
-  enLoad s = "The one-minute load average is " ++
-             show (loadAverage1Minute s) ++ ".";
+  jbLoad = ".i le mentu bo samru'e cnano ca jibni li " ++ l
+  enLoad = "The one-minute load average is " ++ l ++ "."
+  l = show $ loadAverage1Minute s
 
 -- | @super k@ describes the voltage of the battery of the system whose
 -- information is contained within @k@.
 super :: SystemInfo -> String;
-super
+super s
   | useLojban = jbSuper
   | otherwise = enSuper
   where
-  jbSuper s = ".i le dicysro ca klanrvolta li " ++
-              show (currBatVoltage' s);
-  enSuper s = "The current battery voltage is" ++
-              show (currBatVoltage' s) ++ ".";
+  jbSuper = ".i le dicysro ca klanrvolta li " ++ v
+  enSuper = "The current battery voltage is" ++ v ++ "."
+  v = show $ currBatVoltage s;
 
 -- | @currBatVoltage' k@ is the 'Double' value which is contained within
 -- @k@.  @currBatVoltage'@ is used instead of @fromJust@ because the
