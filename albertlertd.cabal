@@ -13,7 +13,7 @@ category:      System
 
 executable albertlertd
   main-is: albertlertd.hs
-  ghc-options: -haddock -threaded -O2
+  ghc-options: -haddock -threaded -O2 -dynamic
   other-modules:
     SystemInfo
     Syslog
