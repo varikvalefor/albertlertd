@@ -7,6 +7,9 @@
 -- Maintainer  : varikvalefor@aol.com
 -- Stability   : experimental
 -- Portability : POSIX
+--
+-- This module contans 'syslog', which writes messages to the system
+-- log.
 module Syslog where
 import Foreign.C.Error (throwErrnoIfMinus1_);
 import Foreign.C.String (CString, withCString);
