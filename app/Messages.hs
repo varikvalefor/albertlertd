@@ -16,43 +16,42 @@ module Messages (
 import SystemInfo;
 import Data.Maybe;
 
--- | @useLojban@ iff messages should be written to the system log in
--- Lojban.
-useLojban :: Bool;
-useLojban = True;
+-- | For all 'Language' @k@, @k@ is a language which @albertlertd@
+-- supports.
+data Language = Lojban | English;
+
+-- | @desiredLang@ is the language in which @syslog@ messages are
+-- written.
+desiredLang :: Language;
+desiredLang = Lojban;
 
 -- | @temp k@ describes the temperature of the system whose information
 -- is contained within @k@.
 temp :: SystemInfo -> String;
-temp s
-  | useLojban = jbTemp
-  | otherwise = enTemp
-  where
-  jbTemp = ".i le ciste ca kelvo li " ++ t
-  enTemp = "The current system temperature is " ++ t ++ "."
-  t = show $ temperature s;
+temp s = case desiredLang of
+  Lojban  -> ".i le ciste ca kelvo li " ++ t
+  English -> "The current system temperature is " ++ t ++ "."
+  _       -> error "Use a real Language, moron."
+  where t = show $ temperature s;
 
 -- | @temp k@ describes the load average of the system whose information
 -- is contained within @k@.
 load :: SystemInfo -> String;
-load s
-  | useLojban = jbLoad
-  | otherwise = enLoad
-  where
-  jbLoad = ".i le mentu bo samru'e cnano ca jibni li " ++ l
-  enLoad = "The one-minute load average is " ++ l ++ "."
-  l = show $ loadAverage1Minute s
+load s = case desiredLang of
+  Lojban  -> ".i le mentu bo samru'e cnano ca jibni li " ++ l
+  English -> "The one-minute load average is " ++ l ++ "."
+  _       -> error $ "Some dummy forgot to add support for the " ++
+                     "specified language."
+  where l = show $ loadAverage1Minute s
 
 -- | @super k@ describes the voltage of the battery of the system whose
 -- information is contained within @k@.
 super :: SystemInfo -> String;
-super s
-  | useLojban = jbSuper
-  | otherwise = enSuper
-  where
-  jbSuper = ".i le dicysro ca klanrvolta li " ++ v
-  enSuper = "The current battery voltage is" ++ v ++ "."
-  v = show $ currBatVoltage s;
+super s = case desiredLang of
+  Lojban  -> ".i le dicysro ca klanrvolta li " ++ v
+  English -> "The current battery voltage is" ++ v ++ "."
+  _       -> error "Egad!  An unknown language is specified!"
+  where v = show $ currBatVoltage s;
 
 -- | @currBatVoltage' k@ is the 'Double' value which is contained within
 -- @k@.  @currBatVoltage'@ is used instead of @fromJust@ because the
