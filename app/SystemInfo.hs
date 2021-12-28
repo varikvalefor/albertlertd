@@ -119,7 +119,7 @@ getInfo = map extractDoubleValue <$> mapM getValue sysctlNames
 extractDoubleValue :: (ExitCode, String, String) -> Maybe Double;
 extractDoubleValue (exitcode, stdout, stderr)
   | exitcode == ExitSuccess = readMaybe $
-    {-     @       @     -}   -- \| Whatever unit which follows the
+    {-     @       @     -}   -- \| Whatever unit follows the
     {-      @     @      -}   -- space can be safely discarded; other
     {-       @   @       -}   -- parts of this program account for
     {-        @ @        -}   -- such units.
