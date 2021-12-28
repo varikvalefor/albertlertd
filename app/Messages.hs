@@ -29,7 +29,7 @@ desiredLang = Lojban;
 -- is contained within @k@.
 temp :: SystemInfo -> String;
 temp s = case desiredLang of
-  Lojban  -> ".i le ciste ca kelvo li " ++ t
+  Lojban  -> ".ni'o le ciste ca kelvo li " ++ t
   English -> "The current system temperature is " ++ t ++ "."
   _       -> error "Use a real Language, moron."
   where t = show $ temperature s;
@@ -38,7 +38,7 @@ temp s = case desiredLang of
 -- is contained within @k@.
 load :: SystemInfo -> String;
 load s = case desiredLang of
-  Lojban  -> ".i le mentu bo samru'e cnano ca jibni li " ++ l
+  Lojban  -> ".ni'o le mentu bo samru'e cnano ca jibni li " ++ l
   English -> "The one-minute load average is " ++ l ++ "."
   _       -> error $ "Some dummy forgot to add support for the " ++
                      "specified language."
@@ -48,7 +48,7 @@ load s = case desiredLang of
 -- information is contained within @k@.
 super :: SystemInfo -> String;
 super s = case desiredLang of
-  Lojban  -> ".i le dicysro ca klanrvolta li " ++ v
+  Lojban  -> ".ni'o le dicysro ca klanrvolta li " ++ v
   English -> "The current battery voltage is" ++ v ++ "."
   _       -> error "Egad!  An unknown language is specified!"
   where v = show $ currBatVoltage s;
