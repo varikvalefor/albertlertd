@@ -39,13 +39,11 @@ data SystemInfo = SystemInfo {
   -- | If @l@ has a battery, then @currBatVoltage k@ is 'Just' the
   -- rated voltage of the primary battery of @l@.
   --
-  -- If @k@ lacks a battery, then @currBatVoltage k@ is 'Nothing'.
+  -- If @l@ lacks a battery, then @currBatVoltage k@ is 'Nothing'.
   ratedBatVoltage :: !(Maybe Double),
-  -- | @loadAverage1Minute k@ is the one-minute load average of the
-  -- system.
+  -- | @loadAverage1Minute k@ is the one-minute load average of @l@.
   loadAverage1Minute :: !Double,
-  -- | @numProcessors k@ is the number of on-line processors of the
-  -- system.
+  -- | @numProcessors k@ is the number of on-line processors of @l@.
   --
   -- VARIK finds that storing a value which should be a natural number
   -- as a 'Double' feels a bit dirty... but is probably the best
@@ -70,7 +68,7 @@ nabSystemInfo =
     numProcessors = mayB numbHeart
   }
   -- \| The C preprocessor prevents the use of the standard
-  -- backslash-based multi-string notation.
+  -- backslash-based long string notation.
   -- This solution is a bit ugly but at least works.
   --
   -- [INSERT THE NOISE OF AN IRRITATED TIM ALLEN HERE.]
