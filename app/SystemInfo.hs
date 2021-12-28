@@ -57,9 +57,9 @@ data SystemInfo = SystemInfo {
 -- @nabSystemInfo@ is run.
 nabSystemInfo :: IO SystemInfo;
 #ifdef openbsd_HOST_OS
-nabSystemInfo =
-  getInfo >>= \[tmp, ratB, road, l1, numbHeart] ->
-  return SystemInfo {
+nabSystemInfo = infoToSystemInfo <$> getInfo
+  where
+  infoToSystemInfo [tmp, ratB, road, l1, numbHeart] = SystemInfo {
     temperature = mayB tmp + 273.15,
     -- \^ C-to-K conversion occurs here.
     ratedBatVoltage = ratB,
@@ -72,10 +72,10 @@ nabSystemInfo =
   -- This solution is a bit ugly but at least works.
   --
   -- [INSERT THE NOISE OF AN IRRITATED TIM ALLEN HERE.]
-  where mayB = fromMaybe (error $ "An error is revealed!  A value " ++
-                                  "is Nothing, which indicates that " ++
-                                  "sysctl(8)'s output is not parsed " ++
-                                  "successfully.");
+  mayB = fromMaybe (error $ "An error is revealed!  A value " ++
+                            "is Nothing, which indicates that " ++
+                            "sysctl(8)'s output is not parsed " ++
+                            "successfully.");
 
 -- | @getInfo@ returns the list of the Celsius-based temperature of the
 -- system, the rated voltage of the system's primary battery, and the
