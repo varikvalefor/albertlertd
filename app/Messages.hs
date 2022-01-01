@@ -4,7 +4,7 @@
 -- License     : Unlicense
 -- Maintainer  : varikvalefor@aol.com
 -- Stability   : experimental
--- Portability : POSIX
+-- Portability : portable
 --
 -- This module contains some functions which generate messages which are
 -- to be written to the system log.
