@@ -59,6 +59,6 @@ super s = case desiredLang of
 -- quality of @fromJust@\'s error message.
 currBatVoltage' :: SystemInfo -> Double;
 currBatVoltage' = fromMaybe (error blah) . currBatVoltage
-  where blah = "Something goes horribly wrong!  currBatVoltage' is " ++
-               "called on a system which lacks a battery, which " ++
-               "should not happen.";
+  where blah = "Something goes horribly wrong!  currBatVoltage' is \
+               \called on a system which lacks a battery, which should \
+               \not happen.";
