@@ -41,7 +41,7 @@ load s = case desiredLang of
   Lojban  -> "le mentu bo samru'e cnano ca jibni li " ++ l
   English -> "The one-minute load average is " ++ l ++ "."
   _       -> error $ "Some dummy forgot to add support for the \
-                     \specified language."
+                     \specified Language."
   where l = show $ loadAverage1Minute s
 
 -- | @super k@ describes the voltage of the battery of the system whose
