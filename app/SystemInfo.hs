@@ -23,8 +23,8 @@ import System.Exit;
 import System.Process;
 import Data.List.Split (splitOn);
 
--- | SystemInfo holds information regarding some arbitrary computer
--- system.
+-- | SystemInfo records hold information regarding arbitrary computer
+-- systems.
 --
 -- Within the documentation of this thing, @l@ refers to the system
 -- whose information is contained within 'SystemInfo' value @k@.
