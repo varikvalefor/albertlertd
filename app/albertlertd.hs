@@ -38,7 +38,7 @@ damn = nabSystemInfo >>= soundAlarm >> threadDelay (5*10^6) >> damn;
 -- | @soundAlarm k@ sounds some alarms iff @k@ indicates that something
 -- goes wrong.
 --
---
+-- = Reason for Sounding Individual Alarms
 --
 -- **Theorem**.  Multiple alarms do not sound simultaneously.
 --
