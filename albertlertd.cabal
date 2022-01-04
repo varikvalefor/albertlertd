@@ -4,6 +4,8 @@ version:       0.1.0.0
 synopsis:      TUI client for the Matrix instant messaging service.
 description:   albertlertd sounds some alarms when stuff goes wrong
                with the system on which albertlertd is run.
+               .
+               albertlertd currently only supports OpenBSD.
 bug-reports:   http://github.com/varikvalefor/matel/issues
 license:       Unlicense
 author:        Varik Valefor
