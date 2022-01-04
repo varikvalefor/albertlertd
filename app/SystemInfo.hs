@@ -6,7 +6,7 @@
 -- License     : Unlicense
 -- Maintainer  : varikvalefor@aol.com
 -- Stability   : experimental
--- Portability : POSIX
+-- Portability : OpenBSD
 --
 -- This module contains 'SystemInfo' and @'nabSystemInfo'@.
 --
