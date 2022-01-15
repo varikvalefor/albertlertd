@@ -42,7 +42,7 @@ damn = nabSystemInfo >>= soundAlarm >> threadDelay (5*10^6) >> damn;
 --
 -- **Theorem**.  Multiple alarms do not sound simultaneously.
 --
--- *Proof.
+-- *Proof*.
 --
 -- Multiple alarms sound simultaneously only if the ease of
 -- understanding the output of @albertlertd@ is not maximised.
