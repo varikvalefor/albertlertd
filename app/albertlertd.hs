@@ -23,7 +23,7 @@ import System.Posix.Process (forkProcess);
 --
 -- "You shouldn't be back here."
 main :: IO ();
-main = void (forkProcess damn) >> exitSuccess;
+main = forkProcess damn >> exitSuccess;
 
 -- | @damn@ is the function which actually serves as the daemon.
 damn :: IO ();
