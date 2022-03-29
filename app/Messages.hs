@@ -31,7 +31,6 @@ temp :: SystemInfo -> String;
 temp s = case desiredLang of
   Lojban  -> "le ciste ca kelvo li " ++ t
   English -> "The current system temperature is " ++ t ++ "."
-  _       -> error "Use a real Language, moron."
   where t = show $ temperature s;
 
 -- | @temp k@ describes the load average of the system whose information
@@ -40,8 +39,6 @@ load :: SystemInfo -> String;
 load s = case desiredLang of
   Lojban  -> "le mentu bo samru'e cnano ca jibni li " ++ l
   English -> "The one-minute load average is " ++ l ++ "."
-  _       -> error $ "Some dummy forgot to add support for the \
-                     \specified Language."
   where l = show $ loadAverage1Minute s
 
 -- | @super k@ describes the voltage of the battery of the system whose
@@ -50,7 +47,6 @@ super :: SystemInfo -> String;
 super s = case desiredLang of
   Lojban  -> "le dicysro ca klanrvolta li " ++ v
   English -> "The current battery voltage is" ++ v ++ "."
-  _       -> error "Egad!  An unknown language is specified!"
   where v = show $ currBatVoltage s;
 
 -- | @currBatVoltage' k@ is the 'Double' value which is contained within
