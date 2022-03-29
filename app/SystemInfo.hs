@@ -88,9 +88,26 @@ nabSystemInfo = infoToSystemInfo <$> getInfo
 getInfo :: IO [Maybe Double];
 getInfo = map extractDoubleValue <$> mapM getValue sysctlNames
   where
-  -- \| Documenting the contents of @sysctlNames@ is briefly considered.
-  -- However, VARIK finds that such documentation is probably
-  -- unnecessary; @sysctlNames@ should be pretty self-explanatory.
+  -- \| @sysctlNames@ is a 5-list.  The purposes of the elements of this
+  -- list, in order, are as follows:
+  --
+  -- 1. The first element of the list is the sysctl(8)-friendly name of
+  --    the temperature sensor.
+  --
+  -- 2. The second element of the list is the sysctl(8)-friendly name of
+  --    the rated-battery-voltage-reporting thing.
+  --
+  -- 3. The third element of the list is the sysctl(8)-friendly name of
+  --    the battery voltage sensor.
+  --
+  -- 4. The fourth element of the list is the sysctl(8)-friendly name of
+  --    the thing what reports the system load average.  Unless Hell
+  --    freezes over, this value is PROBABLY "vm.loadavg".
+  --
+  -- 5. The fifth element of the list is the sysctl(8)-friendly name of
+  --    the thing which reports the number of on-line processors which
+  --    the system contains.  For reasons which should be obvious, this
+  --    value is generally "hw.ncpuonline".
   sysctlNames = ["hw.sensors.cpu0.temp0",
                  "hw.sensors.acpibat0.volt0",
                  "hw.sensors.acpibat0.volt1",
