@@ -37,7 +37,7 @@ temp s = case desiredLang of
 -- is contained within @k@.
 load :: SystemInfo -> String;
 load s = case desiredLang of
-  Lojban  -> "le mentu bo samru'e cnano ca jibni li " ++ l
+  Lojban  -> "le mentu samru'e bo cnano ca jibni li " ++ l
   English -> "The one-minute load average is " ++ l ++ "."
   where l = show $ loadAverage1Minute s
 
