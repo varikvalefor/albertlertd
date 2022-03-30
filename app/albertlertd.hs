@@ -25,7 +25,7 @@ import System.Posix.Process (forkProcess);
 main :: IO ();
 main = void (forkProcess damn) >> exitSuccess;
 
--- | @damn@ is the function which actually serves as the daemon.
+-- | @damn@ is the thing which actually serves as the daemon.
 damn :: IO ();
 damn = nabSystemInfo >>= soundAlarm >> threadDelay (5*10^6) >> damn;
 -- A delay is added to ensure that @albertlertd@ does not
