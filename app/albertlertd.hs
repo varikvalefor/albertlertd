@@ -94,8 +94,9 @@ batteryIsUnderVolted k
 
 -- | @isOverloaded k@ iff @k@ indicates that the system is overloaded.
 --
--- The system is overloaded iff the system's one-minute load average is
--- greater than the number of processors of the system.
+-- For all systems, a system is overloaded iff the number of on-line
+-- processors which this system contains is less than this system's
+-- one-minute load average.
 isOverloaded :: SystemInfo -> Bool;
 isOverloaded sighs = loadAverage1Minute sighs > numProcessors sighs;
 
