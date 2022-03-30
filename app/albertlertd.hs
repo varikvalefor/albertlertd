@@ -104,4 +104,7 @@ isOverloaded sighs = loadAverage1Minute sighs > numProcessors sighs;
 playAudioFile :: String
               -- ^ The name of the audio file which is to be played
               -> IO ();
-playAudioFile f = void $ readProcess "mplayer" ["/usr/local/share/albertlert/" ++ f] [];
+playAudioFile f = void $ readProcess "mplayer" [p] []
+  where
+  -- \| "@p@" is derived from "path".
+  p = "/usr/local/share/albertlert/" ++ f
