@@ -145,6 +145,6 @@ extractDoubleValue (exitcode, stdout, stderr)
     {-    @@@@@@@@@@@    -}   (!!1) $ splitOn "=" stdout
   | otherwise = Nothing;
 #else
-nabSystemInfo = error $ "nabSystemInfo is unfamiliar with " ++
-                        "this operating system.";
+nabSystemInfo = error "nabSystemInfo is unfamiliar with this \
+                      \operating system.";
 #endif
