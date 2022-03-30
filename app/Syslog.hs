@@ -21,8 +21,8 @@ foreign import capi "syslog.h syslog"
            -> CString
            -> IO ();
 
-foreign import capi "syslog.h value LOG_DAEMON"
-  logdaemon :: CInt;
+foreign import capi "syslog.h value LOG_WARNING"
+  logwarning :: CInt;
 
 -- | @syslog l@ writes @l@ to the system log as a daemon.
 syslog :: String -> IO ();
@@ -30,4 +30,4 @@ syslog l = withCString l $ \mosig ->
            -- \| @shutUp@ silences a "potentially insecure" warning
            -- message.
            withCString "%s" $ \shutUp ->
-           syslog_c logdaemon shutUp mosig;
+           syslog_c logwarning shutUp mosig;
