@@ -10,7 +10,7 @@
 --
 -- This module contans 'syslog', which writes messages to the system
 -- log.
-module Syslog where
+module Syslog (syslog) where
 import Foreign.C.Error (throwErrnoIfMinus1_);
 import Foreign.C.String (CString, withCString);
 import Foreign.C.Types;
