@@ -62,12 +62,10 @@ soundAlarm k
                              -- \^ Another infinite loop is prevented.
   | otherwise = return ()
   where
-  soundOvrLoadAlarm = playAudioFile "OVERLOAD.WAV" >>
-                      syslog (Msg.load k)
-  soundThermalAlarm = playAudioFile "OVERHEAT.WAV" >>
-                      syslog (Msg.temp k)
-  soundTheBatSignal = playAudioFile "BATSIGNL.WAV" >>
-                      syslog(Msg.super k)
+  routine a b = playAudioFile a >> syslog (b k)
+  soundOvrLoadAlarm = routine "OVERLOAD.WAV" Msg.load
+  soundThermalAlarm = routine "OVERHEAT.WAV" Msg.temp
+  soundTheBatSignal = routine "BATSIGNL.WAV" Msg.super;
 
 -- | @batteryIsUnderVolted k@ iff the battery of the system which @k@
 -- represents is probably almost depleted.
