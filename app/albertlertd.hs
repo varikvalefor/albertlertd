@@ -72,25 +72,15 @@ soundAlarm k
 -- | @batteryIsUnderVolted k@ iff the battery of the system which @k@
 -- represents is probably almost depleted.
 batteryIsUnderVolted :: SystemInfo -> Bool;
-batteryIsUnderVolted k
-  | isNothing $ currBatVoltage k = False
-  | otherwise = cV / rV < 0.9
+batteryIsUnderVolted k = maybe False (< 0.9) $ liftM2 (/) cV rV
   -- \^ This hack is used because OpenBSD does not properly read the
   -- remaining capacity of the battery of VARIK's primary terminal.
   --
   -- This hack is potentially excessively cautious... but at least
   -- indicates that the battery is hardly full.
   where
-  cV = fromMaybe (error "Something has gone mad wrong.  \
-                        \cV is apparently of type Just... but not \
-                        \really; fromMaybe behaves as though cV is \
-                        \Nothing.")
-                 (currBatVoltage k)
-  rV = fromMaybe (error "currBatVoltage is of type Just, but \
-                        \ratedBatVoltage is of type Nothing.\n\
-                        \In the words of a _Deus Ex_ MJ12 foot \
-                        \soldier, \"you shouldn't be back here.\"")
-                 (ratedBatVoltage k);
+  cV = currBatVoltage k
+  rV = ratedBatVoltage k;
 
 -- | @isOverloaded k@ iff @k@ indicates that the system is overloaded.
 --
