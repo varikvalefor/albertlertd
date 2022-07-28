@@ -74,7 +74,8 @@ soundAlarm k
 batteryIsUnderVolted :: SystemInfo -> Bool;
 batteryIsUnderVolted k = maybe False (< 0.9) $ liftM2 (/) cV rV
   -- \^ This hack is used because OpenBSD does not properly read the
-  -- remaining capacity of the battery of VARIK's primary terminal.
+  -- remaining capacity of the battery of a terminal which is used by
+  -- VARIK.
   --
   -- This hack is potentially excessively cautious... but at least
   -- indicates that the battery is hardly full.
