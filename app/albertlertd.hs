@@ -10,6 +10,7 @@
 -- source code.
 module Main where
 import Syslog;
+import Data.Bool;
 import Data.Maybe;
 import SystemInfo;
 import System.Exit;
@@ -59,8 +60,9 @@ soundAlarm k
                           -- \^ By setting @k@'s temperature to 0 before
                           -- the recursion takes place, @soundAlarm@
                           -- prevents an infinite loop.
-  | batteryIsUnderVolted k = soundTheBatSignal >>
-                             soundAlarm k {currBatVoltage = ratedBatVoltage k}
+  | batteryBelowCapacity k = soundTheBatSignal >>
+                             soundAlarm k {currBatVoltage = ratedBatVoltage k,
+                                           remBatCapacity = (+1) <$> lowBatCapacity k}
                              -- \^ Another infinite loop is prevented.
   | otherwise = return ()
   where
@@ -69,17 +71,22 @@ soundAlarm k
   soundThermalAlarm = routine "OVERHEAT.WAV" Msg.temp
   soundTheBatSignal = routine "BATSIGNL.WAV" Msg.super;
 
--- | @batteryIsUnderVolted k@ iff the battery of the system which @k@
+-- | @batteryBelowCapacity k@ iff the battery of the system which @k@
 -- represents is probably almost depleted.
-batteryIsUnderVolted :: SystemInfo -> Bool;
-batteryIsUnderVolted k = maybe False (< 0.9) $ liftM2 (/) cV rV
+batteryBelowCapacity :: SystemInfo -> Bool;
+batteryBelowCapacity k = bool goodMethod jankHack $ all isJust [lC, rC]
+  where
+  jankHack = maybe False (< 0.9) $ liftM2 (/) cV rV
   -- \^ This hack is used because OpenBSD does not properly read the
   -- remaining capacity of the battery of a terminal which is used by
   -- VARIK.
   --
   -- This hack is potentially excessively cautious... but at least
   -- indicates that the battery is hardly full.
-  where
+  goodMethod = maybe False id $ liftM2 (<=) rC lC
+  goodMethodSupported = all isJust [lC, rC]
+  lC = lowBatCapacity k
+  rC = remBatCapacity k
   cV = currBatVoltage k
   rV = ratedBatVoltage k;
 

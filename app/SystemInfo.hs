@@ -43,6 +43,18 @@ data SystemInfo = SystemInfo {
   ratedBatVoltage :: !(Maybe Double),
   -- | @loadAverage1Minute k@ is the one-minute load average of @l@.
   loadAverage1Minute :: !Double,
+  -- | If @l@ has a battery, then @lowBatCapacity k@ is the maximum
+  -- low capacity of the battery of @l@.
+  --
+  -- If @l@ does not have a battery, then @lowBatCapacity k@ is
+  -- 'Nothing'.
+  lowBatCapacity :: !(Maybe Double),
+  -- | If @l@ has a battery, then @remBatCapacity k@ is the remaining
+  -- capacity of the battery of @l@.
+  --
+  -- If @l@ does not have a battery, then @remBatCapacity k@ is
+  -- 'Nothing'.
+  remBatCapacity :: !(Maybe Double),
   -- | @numProcessors k@ is the number of on-line processors of @l@.
   --
   -- VARIK finds that storing a value which should be a natural number
@@ -59,12 +71,14 @@ nabSystemInfo :: IO SystemInfo;
 #ifdef openbsd_HOST_OS
 nabSystemInfo = infoToSystemInfo <$> getInfo
   where
-  infoToSystemInfo [tmp, ratB, road, l1, numbHeart] = SystemInfo {
+  infoToSystemInfo [tmp, ratB, road, l1, numbHeart, lC, rC] = SystemInfo {
     temperature = mayB tmp + 273.15,
     -- \^ C-to-K conversion occurs here.
     ratedBatVoltage = ratB,
     currBatVoltage = road,
     loadAverage1Minute = mayB l1,
+    lowBatCapacity = lC,
+    remBatCapacity = rC,
     numProcessors = mayB numbHeart
   }
   -- \| The C preprocessor prevents the use of the standard
@@ -88,7 +102,7 @@ nabSystemInfo = infoToSystemInfo <$> getInfo
 getInfo :: IO [Maybe Double];
 getInfo = map extractDoubleValue <$> mapM getValue sysctlNames
   where
-  -- \| @sysctlNames@ is a 5-list.  The purposes of the elements of this
+  -- \| @sysctlNames@ is a 7-list.  The purposes of the elements of this
   -- list, in order, are as follows:
   --
   -- 1. The first element of the list is the sysctl(8)-friendly name of
@@ -107,12 +121,20 @@ getInfo = map extractDoubleValue <$> mapM getValue sysctlNames
   -- 5. The fifth element of the list is the sysctl(8)-friendly name of
   --    the thing which reports the number of on-line processors which
   --    the system contains.  For reasons which should be obvious, this
-  --    value is generally "hw.ncpuonline".
+  --    value is generally "hw.ncpuonline".]
+  --
+  -- 6. The sixth element of the list is the sysctl(8)-friendly name of
+  -- the thing which reports the "low" capacity of the battery.
+  --
+  -- 7. The seventh element of the list is the sysctl(8)-friendly name
+  -- of the thing which reports the remaining capacity of the battery.
   sysctlNames = ["hw.sensors.cpu0.temp0",
                  "hw.sensors.acpibat0.volt0",
                  "hw.sensors.acpibat0.volt1",
                  "vm.loadavg",
-                 "hw.ncpuonline"]
+                 "hw.ncpuonline",
+                 "hw.sensors.acpibat0.amphour2",
+                 "hw.sensors.acpibat0.amphour3"]
   -- \| sysctl(8) is used instead of sysctl(2) because the simplicity of
   -- using sysctl(8) is greater than the simplicity of using sysctl(2);
   -- the reading of sensors via sysctl(2) demands the use of some
