@@ -28,15 +28,7 @@ main = void (forkProcess damn) >> exitSuccess;
 
 -- | @damn@ is the thing which actually serves as the daemon.
 damn :: IO ();
-damn = nabSystemInfo >>= soundAlarm >> addDelay >> damn
-  where
-  -- \| A delay is added to ensure that @albertlertd@ does not
-  -- demand _too_ much processing power.
-  --
-  -- If this delay is not present, then @albertlertd@ damn near
-  -- constantly runs sysctl(8).  The same results are fetched most of
-  -- the time, anyway.
-  addDelay = threadDelay (5*10^6);
+damn = nabSystemInfo >>= soundAlarm >> damn;
 
 -- | @soundAlarm k@ sounds some alarms iff @k@ indicates that something
 -- goes wrong.
@@ -64,7 +56,13 @@ soundAlarm k
                              soundAlarm k {currBatVoltage = ratedBatVoltage k,
                                            remBatCapacity = (+1) <$> lowBatCapacity k}
                              -- \^ Another infinite loop is prevented.
-  | otherwise = return ()
+    -- \| A delay is added to ensure that @albertlertd@ does not
+    -- demand _too_ much processing power.
+    --
+    -- If this delay is not present, then @albertlertd@ damn near
+    -- constantly runs sysctl(8).  The same results are fetched most of
+    -- the time, anyway.
+  | otherwise = threadDelay (5*10^6)
   where
   routine a b = playAudioFile a >> syslog (b k)
   soundOvrLoadAlarm = routine "OVERLOAD.WAV" Msg.load
