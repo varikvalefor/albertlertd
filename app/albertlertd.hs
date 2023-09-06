@@ -62,6 +62,9 @@ soundAlarm k
     -- If this delay is not present, then @albertlertd@ damn near
     -- constantly runs sysctl(8).  The same results are fetched most of
     -- the time, anyway.
+  | isOverloaded k = soundOvrLoadAlarm >>
+                     soundAlarm k {loadAverage1Minute = 0}
+                     -- \^ No loop for you.
   | otherwise = threadDelay (5*10^6)
   where
   routine a b = playAudioFile a >> syslog (b k)
