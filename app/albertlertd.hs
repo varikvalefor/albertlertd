@@ -72,7 +72,7 @@ soundAlarm k
 -- | @batteryBelowCapacity k@ iff the battery of the system which @k@
 -- represents is probably almost depleted.
 batteryBelowCapacity :: SystemInfo -> Bool;
-batteryBelowCapacity k = bool goodMethod jankHack $ all isJust [lC, rC]
+batteryBelowCapacity k = bool goodMethod jankHack goodMethodSupported
   where
   jankHack = maybe False (< 0.9) $ liftM2 (/) cV rV
   -- \^ This hack is used because OpenBSD does not properly read the
