@@ -156,16 +156,17 @@ getInfo = map extractDoubleValue <$> mapM getValue sysctlNames
 -- @extractDoubleValue k@ 'Just' returns this 'Double'.
 -- @extractDoubleValue k@ otherwise outputs 'Nothing'.
 extractDoubleValue :: (ExitCode, String, String) -> Maybe Double;
-extractDoubleValue (exitcode, stdout, stderr)
-  | exitcode == ExitSuccess = readMaybe $
-    {-      @     @      -}   -- \| Whatever unit follows the space can
-    {-       @   @       -}   -- be safely discarded; other parts of
-    {-        @ @        -}   -- this program account for such units.
-    {-         @         -}   head $ words $
-    {- @               @ -}   -- \| Take the thing which FOLLOWS the
-    {-  @@           @@  -}   -- equals sign, dumb-ass.
-    {-    @@@@@@@@@@@    -}   (!!1) $ splitOn "=" stdout
-  | otherwise = Nothing;
+extractDoubleValue (exitcode, stdout, stderr) = withExitCode exitcode
+  where
+  withExitCode (ExitFailure _) = Nothing
+  withExitCode ExitSuccess = readMaybe $
+    {-      @     @      -}  -- \| Whatever unit follows the space can
+    {-       @   @       -}  -- be safely discarded; other parts of
+    {-        @ @        -}  -- this program account for such units.
+    {-         @         -}  head $ words $
+    {- @               @ -}  -- \| Take the thing which FOLLOWS the
+    {-  @@           @@  -}  -- equals sign, dumb-ass.
+    {-    @@@@@@@@@@@    -}  (!!1) $ splitOn "=" stdout;
 #else
 nabSystemInfo = error "nabSystemInfo is unfamiliar with this \
                       \operating system.";
