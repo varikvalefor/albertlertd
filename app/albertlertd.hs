@@ -20,7 +20,7 @@ import qualified Messages as Msg;
 import Control.Concurrent (threadDelay);
 import System.Posix.Process (forkProcess);
 
--- | Attention: Men who need documentation of @main@
+-- | Attention: Prenu which need documentation of @main@
 --
 -- "You shouldn't be back here."
 main :: IO ();
