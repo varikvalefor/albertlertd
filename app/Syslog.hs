@@ -8,8 +8,8 @@
 -- Stability   : experimental
 -- Portability : POSIX
 --
--- This module contans 'syslog', which writes messages to the system
--- log.
+-- This module contans 'syslog', which writes (to the system
+-- log) messages.
 module Syslog (syslog) where
 import Foreign.C.Error (throwErrnoIfMinus1_);
 import Foreign.C.String (CString, withCString);
