@@ -24,7 +24,7 @@ foreign import capi "syslog.h syslog"
 foreign import capi "syslog.h value LOG_WARNING"
   logwarning :: CInt;
 
--- | @syslog l@ writes @l@ to the system log as a daemon.
+-- | @syslog l@ writes (to the system log and as a daemon) @l@.
 syslog :: String -> IO ();
 syslog l = withCString l $ \mosig ->
            -- \| @shutUp@ silences a "potentially insecure" warning
